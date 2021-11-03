@@ -26,27 +26,20 @@ main h2{
 }
 
 .square{
-  border: 2px solid black;
+  float: left;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid black;
   cursor: pointer;
-}
-
-.square.easy{
-  width: calc(500px / 10);
-  height: calc(500px / 10);
-
-}
-.square.hard{
-  width: calc(500px / 9);
-  height: calc(500px / 9);
-}
-
-.square.crazy{
-  width: calc(500px / 7.001);
-  height: calc(500px / 7.001);
 }
 
 .square.clicked{
   background-color: #6495ED;
+}
+
+.square.clicked-bomb{
+  background-color: #DB143C;
 }
 
 footer{
@@ -71,7 +64,6 @@ footer{
 }
 
 .container-options{
-  /* background-color: darkgreen; */
   width: 300px;
   height: 100px;
 }
