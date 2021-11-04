@@ -3,15 +3,22 @@ document.getElementById('button-play').addEventListener('click', function(){
   play();
 })
 
+
+
 function play(){
+ 
   const level = parseInt(document.getElementById('level').value);
-  console.log(level);
+   console.log(level);
    const gridLevels = [100, 81, 49]
    const cellNumbers = gridLevels[level-1];
    const cellPerRow = Math.sqrt(cellNumbers);
    console.log('cell per row',cellPerRow);
 
    const BOMBS_NUMBER = 16;
+   const MAX_ATTEMPTS = cellNumbers - BOMBS_NUMBER;
+   console.log('MAX',MAX_ATTEMPTS);
+   let attempts = 0;
+   const attempList = [];
    const bombs = generateBombs();
   //  console.log('bombe',bombs);
 
@@ -20,14 +27,15 @@ function play(){
    console.log('bombe',bombs);
 
    createSquare();
-   
+
+  
    function createSquare(){
 
     const grid = document.createElement('div');
     grid.className = 'container-grid';
     
     for (let i = 1; i <=cellNumbers; i++) {
-      let square = document.createElement('div');
+      let square = document.createElement('div')
       square.className = 'square';
       square.innerHTML = `<span> ${i} </span>`;
       const cellSize = `calc(100% / ${cellPerRow})`;
@@ -42,23 +50,49 @@ function play(){
     }
    document.querySelector('main').append(grid);
   }
-
+ 
   function handleClickSquare(event){
-    console.log('event', event.target.innerText);
-    const squareClicked = parseInt(event.target.innerText);
-    console.log('square clicked', squareClicked);
-    if(bombs.includes(squareClicked)){
-      this.classList.add('clicked-bomb') 
 
-      for (let i = 1; i <= cellNumbers; i++) {
-        if(bombs.includes(i)){
-          this.classList.add('clicked-bomb');
-        } 
-      }
+  const cellValue = parseInt(event.target.innerText);
+
+   if(bombs.includes(cellValue)){
+     endGame();
+   }else{
+     if(!attempList.includes(cellValue)){
+     attempts++;
+     attempList.push(cellValue);
+     this.classList.add('clicked');
+     if(attempts === MAX_ATTEMPTS){
+       endGame();
+     }
+    
     }
 
-   
-    this.classList.add('clicked');
+   }
+  }
+
+  function endGame(){
+    console.log('END GAME');
+    const cells = document.getElementsByClassName('square');
+    console.log(cells);
+    for (let i = 0; i < cells.length; i++) {
+      if (bombs.includes(i+1)){
+        cells[i].classList.add('clicked-bomb');
+      }
+      cells[i].removeEventListener('click', handleClickSquare);
+    }
+
+    let msg = '';
+    if(attempts == MAX_ATTEMPTS){
+      msg = 'Hai vinto';
+    }else{
+      msg = `Hai perso, punteggio: ${attempts} `;
+    }
+
+    const messaggioFinale = document.querySelector('.container-punteggio');
+    messaggioFinale.innerHTML = `<h5> ${msg} </h5>`;
+    console.log('messaggio finale', msg);
+    
   }
 
   function generateBombs(){
